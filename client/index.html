@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Usuarios</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <h1>Registro de Usuarios</h1>
+
+  <!-- Formulario para registrar un nuevo usuario -->
+  <h2>Nuevo Usuario</h2>
+  <form id="registroForm">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    <label for="apellido">Apellido:</label>
+    <input type="text" id="apellido" name="apellido" required>
+    <label for="contraseña">Contraseña:</label>
+    <input type="password" id="contraseña" name="contraseña" required>
+    <label for="repetirContraseña">Repetir Contraseña:</label>
+    <input type="password" id="repetirContraseña" name="repetirContraseña" required>
+    <label for="pin">PIN:</label>
+    <input type="number" id="pin" name="pin" required>    
+    <label for="gmail">Correo Electrónico:</label>
+    <input type="email" id="gmail" name="gmail" required>
+    <label for="pais">País:</label>
+    <input type="text" id="pais" name="pais" required>
+    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+    <button type="submit">Registrarse</button>
+  </form>
+
+  <!-- Lista de usuarios registrados -->
+  <h2>Usuarios Registrados</h2>
+  <ul id="usuariosList"></ul>
+
+  <script src="script.js"></script>
+</body>
+</html>
