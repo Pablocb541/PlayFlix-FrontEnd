@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD de Videos</title>
+  <link rel="stylesheet" href="../Styles/CrudVideos.css">
+</head>
+<body>
+  <div class="container">
+    <h1>CRUD de Videos</h1>
+
+    <!-- Formulario para crear un nuevo video -->
+    <h2>Nuevo Video</h2>
+    <form id="createForm">
+      <label for="name">Nombre:</label>
+      <input type="text" id="name" name="name">
+      <label for="youtubeUrl">URL de YouTube:</label>
+      <input type="text" id="youtubeUrl" name="youtubeUrl">
+      <button type="submit">Crear Video</button>
+    </form>
+
+    <!-- Lista de videos existentes -->
+    <h2>Listado de Videos</h2>
+    <ul id="videosList"></ul>
+  </div>
+
+  <script>
+    async function loadVideos() {
+      const response = await fetch('http://localhost:3001/api/videos');
+      const videos = await response.json();
+
+      const videosList = document.getElementById('videosList');
+      videosList.innerHTML = '';
+
+      videos.forEach(video => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+          <div class="video-info">
+            <strong>${video.name}</strong> - <a href="${video.youtubeUrl}" target="_blank">Ver en YouTube</a>
+          </div>
+          <div class="video-actions">
+            <button class="delete" onclick="deleteVideo('${video._id}')">Eliminar</button>
+            <button class="edit" onclick="editVideo('${video._id}', '${video.name}', '${video.youtubeUrl}')">Editar</button>
+          </div>
+        `;
+        videosList.appendChild(listItem);
+      });
+    }
+
+    async function createVideo(event) {
+      event.preventDefault();
+
+      const form = event.target;
+      const data = {
+        name: form.name.value,
+        youtubeUrl: form.youtubeUrl.value
+      };
+
+      const response = await fetch('http://localhost:3001/api/videos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        loadVideos();
+        form.reset();
+      } else {
+        console.error('Error al crear el video:', response.statusText);
+      }
+    }
+
+    async function deleteVideo(id) {
+      const response = await fetch(`http://localhost:3001/api/videos?id=${id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        loadVideos();
+      } else {
+        console.error('Error al eliminar el video:', response.statusText);
+      }
+    }
+
+    async function editVideo(id, name, youtubeUrl) {
+      const newName = prompt('Ingrese el nuevo nombre:', name);
+      const newUrl = prompt('Ingrese la nueva URL de YouTube:', youtubeUrl);
+
+      const data = {
+        name: newName,
+        youtubeUrl: newUrl
+      };
+
+      const response = await fetch(`http://localhost:3001/api/videos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        loadVideos();
+      } else {
+        console.error('Error al editar el video:', response.statusText);
+      }
+    }
+
+    loadVideos();
+    
+    document.getElementById('createForm').addEventListener('submit', createVideo);
+  </script>
+</body>
+</html>

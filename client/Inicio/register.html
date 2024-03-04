@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Usuarios</title>
-  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="../Styles/register.css">
 </head>
 <body>
-  <h1>Registro de Usuarios</h1>
 
   <!-- Formulario para registrar un nuevo usuario -->
-  <h2>Nuevo Usuario</h2>
   <form id="registroForm">
+    <h1>Registro de Usuarios</h1>
     <label for="nombre">Nombre:</label>
     <input type="text" id="nombre" name="nombre" required>
     <label for="apellido">Apellido:</label>
@@ -29,11 +28,8 @@
     <label for="fechaNacimiento">Fecha de Nacimiento:</label>
     <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
     <button type="submit">Registrarse</button>
+    <button onclick="window.history.back()" >Volver</button>
   </form>
-
-  <!-- Lista de usuarios registrados -->
-  <h2>Usuarios Registrados</h2>
-  <ul id="usuariosList"></ul>
 
   <script src="script.js"></script>
 </body>

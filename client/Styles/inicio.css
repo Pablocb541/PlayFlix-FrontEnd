@@ -1,0 +1,52 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('../img/fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: 100px; /* Espacio para centrar verticalmente */
+  }
+  
+  h1 {
+    color: #fff;
+  }
+  
+  .button-container {
+    margin-top: 30px;
+  }
+  
+  a.register-btn,
+  button.login-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+  }
+  
+  a.register-btn {
+    background-color: #008CBA;
+  }
+  
+  button.login-btn {
+    background-color: #4CAF50;
+  }
+  
+  a.register-btn:hover,
+  button.login-btn:hover {
+    background-color: #333;
+  }
+  
+  
