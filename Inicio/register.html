@@ -1,79 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Usuarios</title>
-  <link rel="stylesheet" href="../Styles/register.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="/styles/register.css">
 </head>
 <body>
+    <h1>Registro de Usuario</h1>
+    <form id="registro-form">
+        <label for="nombre">Nombre *</label>
+        <input type="text" id="nombre" name="nombre" required>
 
-  <!-- Formulario para registrar un nuevo usuario -->
-  <form id="registroForm">
-    <h1>Registro de Usuarios</h1>
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
-    <label for="apellido">Apellido:</label>
-    <input type="text" id="apellido" name="apellido" required>
-    <label for="contraseña">Contraseña:</label>
-    <input type="password" id="contraseña" name="contraseña" required>
-    <label for="repetirContraseña">Repetir Contraseña:</label>
-    <input type="password" id="repetirContraseña" name="repetirContraseña" required>
-    <label for="pin">PIN:</label>
-    <input type="number" id="pin" name="pin" required>    
-    <label for="gmail">Correo Electrónico:</label>
-    <input type="email" id="gmail" name="gmail" required>
-    <label for="pais">País:</label>
-    <input type="text" id="pais" name="pais" required>
-    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
-    <button type="submit" onclick="validarRegistro(event)">Registrarse</button>
-    <button onclick="window.history.back()">Volver</button>
-  </form>
+        <label for="apellido">Apellido *</label>
+        <input type="text" id="apellido" name="apellido" required>
 
-  <script>
-    function validarRegistro(event) {
-      // Detener el envío del formulario por defecto
-      event.preventDefault();
+        <label for="correoElectronico">Correo Electrónico *</label>
+        <input type="email" id="correoElectronico" name="correoElectronico" required>
 
-      // Obtener los valores de los campos
-      const nombre = document.getElementById('nombre').value;
-      const apellido = document.getElementById('apellido').value;
-      const contraseña = document.getElementById('contraseña').value;
-      const repetirContraseña = document.getElementById('repetirContraseña').value;
-      const pin = document.getElementById('pin').value;
-      const gmail = document.getElementById('gmail').value;
-      const pais = document.getElementById('pais').value;
-      const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+        <label for="contraseña">Contraseña *</label>
+        <input type="password" id="contraseña" name="contraseña" required>
 
-      // Validaciones
-      if (!nombre || !apellido || !contraseña || !repetirContraseña || !pin || !gmail || !pais || !fechaNacimiento) {
-        alert('Todos los campos son obligatorios.');
-        return;
-      }
+        <label for="repetirContraseña">Repetir Contraseña *</label>
+        <input type="password" id="repetirContraseña" name="repetirContraseña" required>
 
-      // Validar contraseña
-      if (contraseña !== repetirContraseña) {
-        alert('Las contraseñas no coinciden.');
-        return;
-      }
+        <label for="pin">PIN *</label>
+        <input type="number" id="pin" name="pin" required>
 
-      // Validar edad
-      const fechaNacimientoDate = new Date(fechaNacimiento);
-      const hoy = new Date();
-      const edad = hoy.getFullYear() - fechaNacimientoDate.getFullYear();
-      if (hoy.getMonth() < fechaNacimientoDate.getMonth() || (hoy.getMonth() === fechaNacimientoDate.getMonth() && hoy.getDate() < fechaNacimientoDate.getDate())) {
-        edad--;
-      }
-      if (edad < 18) {
-        alert('Debes ser mayor de 18 años para registrarte.');
-        return;
-      }
+        <label for="pais">País</label>
+        <input type="text" id="pais" name="pais">
 
-      // Si todas las validaciones pasan, enviar el formulario
-      document.getElementById('registroForm').submit();
-    }
-  </script>
+        <label for="fechaNacimiento">Fecha de Nacimiento *</label>
+        <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
 
+        <button type="submit">Registrarse</button>
+    </form>
+
+    <script>
+        document.getElementById("registro-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            try {
+                const response = await fetch("http://localhost:3000/api/registros", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const responseData = await response.json();
+                alert(`Registro exitoso: ${JSON.stringify(responseData)}`);
+                // Limpiar los campos del formulario después de enviarlos
+                document.getElementById("registro-form").reset();
+            } catch (error) {
+                console.error("Error al registrar usuario:", error);
+                alert(`Error al registrar usuario: ${error.message}`);
+            }
+        });
+    </script>
 </body>
 </html>

@@ -3,12 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Netflix-like Video Player</title>
-  <style>
-    .video-container {
-      margin-bottom: 20px;
-    }
-  </style>
+  <title></title>
+  <link rel="stylesheet" href="/styles/videos.css">
 </head>
 <body>
   <h1>Videos</h1>
@@ -19,54 +15,64 @@
   <script>
     // Clase para extraer y mostrar los videos
     class YouTubeLinkExtractor {
-        constructor(apiUrl) {
-            this.apiUrl = apiUrl;
+      constructor(apiUrl) {
+        this.apiUrl = apiUrl;
+      }
+
+      async fetchVideos() {
+        try {
+          const response = await fetch(this.apiUrl);
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.error('Error fetching videos:', error);
+          return [];
         }
+      }
 
-        async fetchVideos() {
-            try {
-                const response = await fetch(this.apiUrl);
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('Error fetching videos:', error);
-                return [];
-            }
+      async renderVideos(containerId) {
+        const videos = await this.fetchVideos();
+        const container = document.getElementById(containerId);
+        if (!container) {
+          console.error(`Container element with ID ${containerId} not found.`);
+          return;
         }
+        container.innerHTML = ''; // Limpiar el contenedor antes de agregar los videos
 
-        async renderVideos(containerId) {
-            const videos = await this.fetchVideos();
-            const container = document.getElementById(containerId);
-            if (!container) {
-                console.error(`Container element with ID ${containerId} not found.`);
-                return;
-            }
-            container.innerHTML = ''; // Limpiar el contenedor antes de agregar los videos
+        for (let i = 0; i < videos.length; i++) {
+          const video = videos[i];
+          const videoId = this.extractVideoId(video.youtubeUrl);
+          const videoContainer = document.createElement('div');
+          videoContainer.classList.add('video-container');
 
-            for (let i = 0; i < videos.length; i++) {
-                const video = videos[i];
-                const iframe = document.createElement('iframe');
-                iframe.width = '560';
-                iframe.height = '315';
-                iframe.src = `https://www.youtube.com/embed/${this.extractVideoId(video.youtubeUrl)}`; // Utiliza un método para extraer el ID del video
-                iframe.title = "YouTube video player";
-                iframe.frameborder = "0";
-                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                iframe.allowFullscreen = true;
+          // Agregar evento de clic al contenedor de video
+          videoContainer.addEventListener('click', () => {
+            videoContainer.innerHTML = `<iframe width="480" height="270" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+          });
+          
+          const thumbnail = document.createElement('img');
+          thumbnail.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+          thumbnail.alt = 'Video Thumbnail';
+          thumbnail.classList.add('video-thumbnail');
 
-                const videoContainer = document.createElement('div');
-                videoContainer.classList.add('video-container');
-                videoContainer.appendChild(iframe);
+          const overlay = document.createElement('div');
+          overlay.classList.add('video-overlay');
+          overlay.innerHTML = `
+            <div class="video-title">${video.name}</div>
+          `;
 
-                container.appendChild(videoContainer);
-            }
+          videoContainer.appendChild(thumbnail);
+          videoContainer.appendChild(overlay);
+
+          container.appendChild(videoContainer);
         }
+      }
 
-        extractVideoId(youtubeUrl) {
-            const url = new URL(youtubeUrl);
-            const videoId = url.searchParams.get('v');
-            return videoId;
-        }
+      extractVideoId(youtubeUrl) {
+        const url = new URL(youtubeUrl);
+        const videoId = url.searchParams.get('v');
+        return videoId;
+      }
     }
 
     // Uso de la clase YouTubeLinkExtractor
