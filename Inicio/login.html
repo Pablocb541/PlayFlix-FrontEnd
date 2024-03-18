@@ -1,55 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
+    <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="/Styles/login.css">
 </head>
 <body>
-    <h2>Iniciar Sesión</h2>
-    <form id="loginForm" action="http://localhost:3000/api/login" method="POST">
-        <label for="correo">Correo Electrónico:</label>
-        <input type="email" id="correo" name="correoElectronico" required><br>
+    <div class="container">
+        <h1>Iniciar sesión</h1>
+        <form id="login-form">
+            <label for="correoElectronico">Correo Electrónico:</label>
+            <input type="email" id="correoElectronico" name="correoElectronico" required>
 
-        <label for="contraseña">Contraseña:</label>
-        <input type="password" id="contraseña" name="contraseña" required><br>
+            <label for="contraseña">Contraseña:</label>
+            <input type="password" id="contraseña" name="contraseña" required>
 
-        <button type="submit">Iniciar Sesión</button>
-    </form>
+            <button type="submit">Iniciar sesión</button>
+        </form>
+
+        <div id="error-message"></div>
+
+        <button id="register-btn">¿No estás registrado? Regístrate aquí</button>
+    </div>
 
     <script>
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Evitar el envío del formulario
+        document.getElementById("login-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
 
-            // Obtener los valores de correo y contraseña del formulario
-            var correoElectronico = document.getElementById("correo").value;
-            var contraseña = document.getElementById("contraseña").value;
+            const formData = new FormData(this);
 
-            // Realizar una solicitud POST al servidor para iniciar sesión
-            fetch("/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    correoElectronico: correoElectronico,
-                    contraseña: contraseña
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Si la respuesta es exitosa, redirigir al usuario a ./videos.html
-                    window.location.href = "./videos.html";
-                } else {
-                    // Si la respuesta es un error, mostrar un mensaje al usuario
-                    alert("Usuario o contraseña incorrectos");
-                }
-            })
-            .catch(error => {
-                console.error("Error al iniciar sesión:", error);
-                // Manejar errores de red o del servidor
-                alert("Hubo un error al iniciar sesión. Por favor, inténtalo de nuevo más tarde.");
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
             });
+
+            try {
+                const response = await fetch("http://localhost:3000/api/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    window.location.href = "./videos.html"; // Redireccionar a videos.html
+                } else {
+                    const errorData = await response.json();
+                    document.getElementById("error-message").innerText = errorData.error;
+                }
+            } catch (error) {
+                console.error("Error al iniciar sesión:", error);
+                document.getElementById("error-message").innerText = "Error al iniciar sesión";
+            }
+        });
+
+        document.getElementById("register-btn").addEventListener("click", function() {
+            window.location.href = "./register.html"; // Redireccionar a register.html
         });
     </script>
 </body>
