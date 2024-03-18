@@ -19,48 +19,54 @@
   <script>
     // Clase para extraer y mostrar los videos
     class YouTubeLinkExtractor {
-      constructor(apiUrl) {
-        this.apiUrl = apiUrl;
-      }
-
-      async fetchVideos() {
-        try {
-          const response = await fetch(this.apiUrl);
-          const data = await response.json();
-          return data;
-        } catch (error) {
-          console.error('Error fetching videos:', error);
-          return [];
+        constructor(apiUrl) {
+            this.apiUrl = apiUrl;
         }
-      }
 
-      async renderVideos(containerId) {
-        const videos = await this.fetchVideos();
-        const container = document.getElementById(containerId);
-        if (!container) {
-          console.error(`Container element with ID ${containerId} not found.`);
-          return;
+        async fetchVideos() {
+            try {
+                const response = await fetch(this.apiUrl);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching videos:', error);
+                return [];
+            }
         }
-        container.innerHTML = ''; // Limpiar el contenedor antes de agregar los videos
 
-        for (let i = 0; i < videos.length; i++) {
-          const video = videos[i];
-          const iframe = document.createElement('iframe');
-          iframe.width = '560';
-          iframe.height = '315';
-          iframe.src = `https://www.youtube.com/embed/${video.youtubeUrl}`;
-          iframe.title = "YouTube video player";
-          iframe.frameborder = "0";
-          iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-          iframe.allowFullscreen = true;
+        async renderVideos(containerId) {
+            const videos = await this.fetchVideos();
+            const container = document.getElementById(containerId);
+            if (!container) {
+                console.error(`Container element with ID ${containerId} not found.`);
+                return;
+            }
+            container.innerHTML = ''; // Limpiar el contenedor antes de agregar los videos
 
-          const videoContainer = document.createElement('div');
-          videoContainer.classList.add('video-container');
-          videoContainer.appendChild(iframe);
+            for (let i = 0; i < videos.length; i++) {
+                const video = videos[i];
+                const iframe = document.createElement('iframe');
+                iframe.width = '560';
+                iframe.height = '315';
+                iframe.src = `https://www.youtube.com/embed/${this.extractVideoId(video.youtubeUrl)}`; // Utiliza un método para extraer el ID del video
+                iframe.title = "YouTube video player";
+                iframe.frameborder = "0";
+                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+                iframe.allowFullscreen = true;
 
-          container.appendChild(videoContainer);
+                const videoContainer = document.createElement('div');
+                videoContainer.classList.add('video-container');
+                videoContainer.appendChild(iframe);
+
+                container.appendChild(videoContainer);
+            }
         }
-      }
+
+        extractVideoId(youtubeUrl) {
+            const url = new URL(youtubeUrl);
+            const videoId = url.searchParams.get('v');
+            return videoId;
+        }
     }
 
     // Uso de la clase YouTubeLinkExtractor
