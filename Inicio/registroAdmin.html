@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="/Styles/login.css">
+</head>
+<body>
+    <h1>Bienvenido</h1>
+    <div class="container">
+   
+        <h1>Ingresar Pin</h1>
+        <form id="login-form">
+            <label for="pin">PIN:</label>
+            <input type="text" id="pin" name="pin" required>
+
+            <button type="submit">Iniciar</button>
+        </form>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            try {
+                const response = await fetch("http://localhost:3000/api/loginUsuarios", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    window.location.href = "./admin.html"; // Redireccionar a administrador.html
+                } else {
+                    const errorData = await response.json();
+                    document.getElementById("error-message").innerText = errorData.error;
+                }
+            } catch (error) {
+                console.error("Error al iniciar sesión:", error);
+                document.getElementById("error-message").innerText = "Error al iniciar sesión";
+            }
+        });
+
+    </script>
+</body>
+</html>

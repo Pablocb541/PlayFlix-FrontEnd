@@ -5,8 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title></title>
   <link rel="stylesheet" href="/styles/videos.css">
+
 </head>
 <body>
+  <div class="navbar">
+    <a href="login.html" onclick="logout()">Cerrar Sesión</a>
+    <a href="administrador.html" onclick="backToProfiles()">Perfiles</a>
+  </div>
+
   <h1>PlayList</h1>
 
   <!-- Contenedor donde se mostrarán los videos -->
@@ -47,7 +53,15 @@
 
           // Agregar evento de clic al contenedor de video
           videoContainer.addEventListener('click', () => {
-            videoContainer.innerHTML = `<iframe width="480" height="270" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            // Cambiar el tamaño del iframe para que se vea más grande
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}`;
+            iframe.title = 'YouTube video player';
+            iframe.frameBorder = '0';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            videoContainer.innerHTML = '';
+            videoContainer.appendChild(iframe);
           });
           
           const thumbnail = document.createElement('img');

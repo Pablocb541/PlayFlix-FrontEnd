@@ -8,6 +8,11 @@
 </head>
 <body>
 
+  <div class="navbar">
+    <a href="login.html" onclick="logout()">Cerrar Sesión</a>
+    <!-- <a href="administrador.html" onclick="backToProfiles()">Perfiles</a> -->
+  </div>
+
 <h1>Perfiles</h1>
 
 <div id="perfiles-list"></div>
@@ -33,8 +38,13 @@ async function cargarPerfiles() {
       perfilElement.innerHTML = `
         <h2 class="nombreCompleto">${perfil.nombreCompleto}</h2>
         <img class="avatar" src="${perfil.avatar}" alt="Avatar" width="100">
-        <p>PIN: <input type="text" class="pin-input" id="pin-${perfil._id}" placeholder="Ingrese el PIN"></p>
-        <button class="ingresar-btn" onclick="ingresar('${perfil._id}')">Ingresar</button>
+        ${perfil.nombreCompleto !== "administrador" ? `
+          <p>PIN: <input type="text" class="pin-input" id="pin-${perfil._id}" placeholder="Ingrese el PIN"></p>
+          <button class="ingresar-btn" onclick="ingresar('${perfil._id}', '${perfil.nombreCompleto}')">Ingresar</button>
+        ` : `
+        <br />
+          <button class="ingresar-btn" onclick="ingresarComoAdministrador()">Ingresar como Administrador</button>
+        `}
         <hr>
       `;
       perfilesList.appendChild(perfilElement);
@@ -44,8 +54,18 @@ async function cargarPerfiles() {
   }
 }
 
+// Función para ingresar como administrador
+function ingresarComoAdministrador() {
+  window.location.href = "./registroAdmin.html"; // Redirigir directamente al panel de administrador
+}
+
 // Función para enviar el PIN al servidor e ingresar
-async function ingresar(perfilId) {
+async function ingresar(perfilId, nombreCompleto) {
+  if (nombreCompleto === "administrador") {
+    window.location.href = "./registroAdmin.html"; // Redirigir directamente al panel de administrador
+    return;
+  }
+
   const pinInput = document.getElementById(`pin-${perfilId}`);
   const pin = pinInput.value;
 
