@@ -28,7 +28,7 @@
   <script>
     // Función para cargar los videos desde la API
     async function loadVideos() {
-      const response = await fetch('http://localhost:3001/api/videos'); // Realiza una solicitud GET a la API
+      const response = await fetch('http://localhost:3000/api/videos'); // Realiza una solicitud GET a la API
       const videos = await response.json(); // Convierte la respuesta en formato JSON
 
       const videosList = document.getElementById('videosList'); // Obtiene la lista de videos en el HTML
@@ -60,7 +60,7 @@
         youtubeUrl: form.youtubeUrl.value
       };
 
-      const response = await fetch('http://localhost:3001/api/videos', {
+      const response = await fetch('http://localhost:3000/api/videos', {
         method: 'POST', // Realiza una solicitud POST a la API
         headers: {
           'Content-Type': 'application/json' // Especifica el tipo de contenido
@@ -78,7 +78,7 @@
 
     // Función para eliminar un video
     async function deleteVideo(id) {
-      const response = await fetch(`http://localhost:3001/api/videos?id=${id}`, {
+      const response = await fetch(`http://localhost:3000/api/videos?id=${id}`, {
         method: 'DELETE' // Realiza una solicitud DELETE a la API para eliminar el video con el ID especificado
       });
 
@@ -99,7 +99,7 @@
         youtubeUrl: newUrl
       };
 
-      const response = await fetch(`http://localhost:3001/api/videos/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/videos/${id}`, {
         method: 'PUT', // Realiza una solicitud PUT a la API para actualizar la información del video
         headers: {
           'Content-Type': 'application/json' // Especifica el tipo de contenido

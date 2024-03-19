@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usuarios Restringidos</title>
+<link rel="stylesheet" href="/styles/perfiles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Crear Usuario Restringido</h1>
+    <form id="crearUsuarioForm">
+      <label for="nombreCompleto">Nombre Completo*</label>
+      <input type="text" id="nombreCompleto" required>
+      <label for="pin">PIN*</label>
+      <input type="text" id="pin" required>
+      <label for="avatar">Avatar*</label>
+      <select id="avatar" required>
+        <option value="/img/hacker.png">Avatar 1</option>
+        <option value="/img/cat.png">Avatar 2</option>
+        <option value="/img/panda.png">Avatar 3</option>
+        <option value="/img/bear.png">Avatar 4</option>
+      </select>
+      <label for="edad">Edad*</label>
+      <input type="number" id="edad" required>
+      <button type="submit">Crear Usuario</button>
+    </form>
+
+    <h1>Usuarios Restringidos</h1>
+    <ul id="usuariosRestringidosList"></ul>
+  </div>
+
+  <script>
+    const usuariosRestringidosList = document.getElementById('usuariosRestringidosList');
+
+    async function cargarUsuariosRestringidos() {
+      try {
+        const response = await fetch('http://localhost:3000/api/perfiles', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        usuariosRestringidosList.innerHTML = '';
+        data.forEach(usuario => {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `
+            <span>${usuario.nombreCompleto}</span>
+            <span><img src="${usuario.avatar}" alt="Avatar" style="width: 50px; height: 50px;"></span>
+            <button onclick="editarUsuario('${usuario._id}')">Editar</button>
+            <button onclick="eliminarUsuario('${usuario._id}')">Eliminar</button>
+          `;
+          usuariosRestringidosList.appendChild(listItem);
+        });
+      } catch (error) {
+        console.error('Error al cargar usuarios restringidos:', error);
+      }
+    }
+
+    document.getElementById('crearUsuarioForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const nombreCompleto = document.getElementById('nombreCompleto').value;
+      const pin = document.getElementById('pin').value;
+      const avatar = document.getElementById('avatar').value;
+      const edad = document.getElementById('edad').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/perfiles', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ nombreCompleto, pin, avatar, edad })
+        });
+        const data = await response.json();
+        console.log('Usuario restringido creado:', data);
+        cargarUsuariosRestringidos();
+      } catch (error) {
+        console.error('Error al crear usuario restringido:', error);
+      }
+    });
+
+    async function editarUsuario(id) {
+      window.location.href = `http://localhost:3000/editar-usuario/${id}`;
+    }
+
+    async function eliminarUsuario(id) {
+      if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+        try {
+          const response = await fetch(`http://localhost:3000/api/perfiles?id=${id}`, {
+            method: 'DELETE'
+          });
+          const data = await response.json();
+          console.log('Usuario eliminado:', data);
+          cargarUsuariosRestringidos();
+        } catch (error) {
+          console.error('Error al eliminar usuario restringido:', error);
+        }
+      }
+    }
+
+    cargarUsuariosRestringidos();
+  </script>
+</body>
+</html>
