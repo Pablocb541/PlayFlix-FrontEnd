@@ -1,5 +1,6 @@
 /* Estilos generales */
 body {
+    background-image: url('../img/fondo.jpg');
     font-family: Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
@@ -14,11 +15,13 @@ body {
   
   h1 {
     margin-bottom: 20px;
+    color: rgb(255, 255, 255);
   }
   
   form label {
     display: block;
     margin-bottom: 5px;
+    color: rgb(255, 255, 255);
   }
   
   input[type="text"],
@@ -47,6 +50,7 @@ body {
   
   /* Estilos para la lista de usuarios */
   ul {
+    color: rgb(255, 255, 255);
     list-style: none;
     padding: 0;
   }

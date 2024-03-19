@@ -5,10 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Usuarios Restringidos</title>
 <link rel="stylesheet" href="/styles/perfiles.css">
+<link rel="stylesheet" href="/styles/admin.css">
 </head>
 <body>
+  <header>
+    <h1>Panel de Administrador</h1>
+    <nav>
+      <ul>
+        <li><a href="administrador.html">Perfiles</a></li>
+        <li><a href="perfiles.html">Crear Perfiles</a></li>
+        <li><a href="CrudVideos.html">Gestión de Videos</a></li>
+        <li><a href="videos.html">Ver PlayList</a></li>
+      </ul>
+    </nav>
+  </header>
+
   <div class="container">
     <h1>Crear Usuario Restringido</h1>
+    <div id="errorMessages"></div> <!-- Nuevo elemento para mostrar los mensajes de error -->
     <form id="crearUsuarioForm">
       <label for="nombreCompleto">Nombre Completo*</label>
       <input type="text" id="nombreCompleto" required>
@@ -66,6 +80,16 @@
       const edad = document.getElementById('edad').value;
 
       try {
+        // Validar que todos los campos estén llenos antes de enviar la solicitud al servidor
+        if (!nombreCompleto || !pin || !avatar || !edad) {
+          throw new Error('Todos los campos son requeridos.');
+        }
+
+        // Validar el formato del PIN (aquí puedes agregar más validaciones según sea necesario)
+        if (!/^\d{6}$/g.test(pin)) {
+          throw new Error('Formato de PIN incorrecto. Debe ser un número de 6 dígitos.');
+        }
+
         const response = await fetch('http://localhost:3000/api/perfiles', {
           method: 'POST',
           headers: {
@@ -76,8 +100,11 @@
         const data = await response.json();
         console.log('Usuario restringido creado:', data);
         cargarUsuariosRestringidos();
+        limpiarFormulario(); // Limpia el formulario después de crear el usuario
       } catch (error) {
         console.error('Error al crear usuario restringido:', error);
+        const errorMessageDiv = document.getElementById('errorMessages');
+        errorMessageDiv.innerHTML = `<p>${error.message}</p>`; // Mostrar el mensaje de error
       }
     });
 
@@ -100,7 +127,17 @@
       }
     }
 
+    function limpiarFormulario() {
+      document.getElementById('nombreCompleto').value = '';
+      document.getElementById('pin').value = '';
+      document.getElementById('avatar').value = '/img/hacker.png';
+      document.getElementById('edad').value = '';
+    }
+    
+
     cargarUsuariosRestringidos();
+
+    
   </script>
 </body>
 </html>

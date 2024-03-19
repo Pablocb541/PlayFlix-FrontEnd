@@ -47,7 +47,7 @@
                 });
 
                 if (response.ok) {
-                    window.location.href = "./videos.html"; // Redireccionar a videos.html
+                    window.location.href = "./administrador.html"; // Redireccionar a videos.html
                 } else {
                     const errorData = await response.json();
                     document.getElementById("error-message").innerText = errorData.error;

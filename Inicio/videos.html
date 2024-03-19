@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/styles/videos.css">
 </head>
 <body>
-  <h1>Videos</h1>
+  <h1>PlayList</h1>
 
   <!-- Contenedor donde se mostrarán los videos -->
   <div id="videoContainer"></div>
@@ -76,7 +76,7 @@
     }
 
     // Uso de la clase YouTubeLinkExtractor
-    const extractor = new YouTubeLinkExtractor('http://localhost:3001/api/videos'); // Reemplaza la URL por la ruta correcta de tu API
+    const extractor = new YouTubeLinkExtractor('http://localhost:3000/api/videos'); // Reemplaza la URL por la ruta correcta de tu API
     extractor.renderVideos('videoContainer'); // Reemplaza 'videoContainer' por el ID del contenedor HTML donde deseas mostrar los videos
   </script>
 </body>
