@@ -9,7 +9,6 @@
 <body>
     <h1>Bienvenido</h1>
     <div class="container">
-   
         <h1>Iniciar sesión</h1>
         <form id="login-form">
             <label for="correoElectronico">Correo Electrónico:</label>
@@ -47,7 +46,15 @@
                 });
 
                 if (response.ok) {
-                    window.location.href = "./administrador.html"; // Redireccionar a videos.html
+                    const responseData = await response.json();
+                    const { id, pin } = responseData;
+
+                    // Almacena el ID y el PIN en el localStorage
+                    localStorage.setItem('userId', id);
+                    localStorage.setItem('pin', pin);
+
+                    // Redireccionar a la página deseada después del inicio de sesión exitoso
+                    window.location.href = "./administrador.html";
                 } else {
                     const errorData = await response.json();
                     document.getElementById("error-message").innerText = errorData.error;

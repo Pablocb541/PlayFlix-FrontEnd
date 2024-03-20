@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edicion de Videos</title>
+  <link rel="stylesheet" href="../Styles/CrudVideos.css">
+  <link rel="stylesheet" href="../Styles/admin.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="container-navbar">
+        <h1>Panel de Administrador</h1>
+        <nav class="navbar-nav">
+            <ul class="navbar-list">
+                <a href="administrador.html">Perfiles</a>
+                <a href="crearPerfiles.html">Gestión de  Perfiles</a>
+                <a href="crearVideos.html">Gestión de Videos</a>
+                <a href="login.html">Cerrar Sesión</a>
+            </ul>
+        </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>Edicion de Videos</h1>
+
+    <!-- Formulario para crear un nuevo video -->
+    <div id="crearVideoFormContainer" style="display: none;">
+      <h2>Nuevo Video</h2>
+      <form id="createForm">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name">
+        <label for="youtubeUrl">URL de YouTube:</label>
+        <input type="text" id="youtubeUrl" name="youtubeUrl">
+        <button type="submit">Crear Video</button>
+      </form>
+    </div>
+
+    <!-- Lista de videos existentes -->
+    <h2>Listado de Videos</h2>
+    <ul id="videosList"></ul> 
+  </div>
+
+  <div id="editarVideoFormContainer" style="display: none;">
+    <h2>Editar Video</h2>
+    <form id="editarVideoForm">
+      <input type="hidden" id="editId">
+      <label for="editNombre">Nombre*</label>
+      <input type="text" id="editNombre" required>
+      <label for="editUrl">URL de YouTube*</label>
+      <input type="text" id="editUrl" required>
+      <button type="submit">Guardar Cambios</button>
+    </form>
+  </div>
+
+  <script>
+    const videosList = document.getElementById('videosList');
+    const crearVideoFormContainer = document.getElementById('crearVideoFormContainer');
+    const editarVideoFormContainer = document.getElementById('editarVideoFormContainer');
+    const createForm = document.getElementById('createForm');
+    const editarVideoForm = document.getElementById('editarVideoForm');
+    const editIdInput = document.getElementById('editId');
+    const editNombreInput = document.getElementById('editNombre');
+    const editUrlInput = document.getElementById('editUrl');
+
+    async function loadVideos() {
+      try {
+        const response = await fetch('http://localhost:3000/api/videos');
+        const videos = await response.json();
+        videosList.innerHTML = '';
+        videos.forEach(video => {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `
+            <div class="video-info">
+              <strong>${video.name}</strong> - <a href="${video.youtubeUrl}" target="_blank">Ver en YouTube</a>
+            </div>
+            <div class="video-actions">
+              <button onclick="mostrarFormularioEditar('${video._id}', '${video.name}', '${video.youtubeUrl}')">Editar</button>
+              <button onclick="eliminarVideo('${video._id}')">Eliminar</button>
+            </div>
+          `;
+          videosList.appendChild(listItem);
+        });
+      } catch (error) {
+        console.error('Error al cargar los videos:', error);
+      }
+    }
+
+    function mostrarFormularioEditar(id, nombre, url) {
+      editarVideoFormContainer.style.display = 'block';
+      editIdInput.value = id;
+      editNombreInput.value = nombre;
+      editUrlInput.value = url;
+    }
+
+    createForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const name = document.getElementById('name').value;
+      const youtubeUrl = document.getElementById('youtubeUrl').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/videos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name, youtubeUrl })
+        });
+        if (response.ok) {
+          loadVideos();
+          createForm.reset();
+        } else {
+          console.error('Error al crear el video:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error al crear el video:', error);
+      }
+    });
+
+    editarVideoForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const id = editIdInput.value;
+      const name = editNombreInput.value;
+      const youtubeUrl = editUrlInput.value;
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/videos/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name, youtubeUrl })
+        });
+        if (response.ok) {
+          loadVideos();
+          editarVideoFormContainer.style.display = 'none';
+        } else {
+          console.error('Error al editar el video:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error al editar el video:', error);
+      }
+    });
+
+    async function eliminarVideo(id) {
+      if (confirm('¿Estás seguro de que deseas eliminar este video?')) {
+        try {
+          const response = await fetch(`http://localhost:3000/api/videos?id=${id}`, {
+            method: 'DELETE'
+          });
+          if (response.ok) {
+            loadVideos();
+          } else {
+            console.error('Error al eliminar el video:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error al eliminar el video:', error);
+        }
+      }
+    }
+
+    loadVideos();
+  </script>
+</body>
+</html>

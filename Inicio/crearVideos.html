@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Video</title>
+  <link rel="stylesheet" href="../Styles/CrudVideos.css">
+  <link rel="stylesheet" href="../Styles/admin.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="container-navbar">
+        <h1>Panel de Administrador</h1>
+        <nav class="navbar-nav">
+            <ul class="navbar-list">
+                <a href="administrador.html">Perfiles</a>
+                <a href="crearPerfiles.html">Gestión de  Perfiles</a>
+                <a href="crearVideos.html">Gestión de Videos</a>
+                <a href="login.html">Cerrar Sesión</a>
+            </ul>
+        </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <h1>Crear Video</h1>
+    <div id="errorMessages"></div> <!-- Nuevo elemento para mostrar los mensajes de error -->
+    <form id="crearVideoForm">
+      <label for="nombre">Nombre*</label>
+      <input type="text" id="nombre" required>
+      <label for="url">URL de YouTube*</label>
+      <input type="text" id="url" required>
+      <button type="submit" id="crearVideoBtn">Crear Video</button>
+      <button onclick="irAEditar()">Editar Videos</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('crearVideoForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const nombre = document.getElementById('nombre').value;
+      const url = document.getElementById('url').value;
+
+      try {
+        // Validar que todos los campos estén llenos antes de enviar la solicitud al servidor
+        if (!nombre || !url) {
+          throw new Error('Todos los campos son requeridos.');
+        }
+
+        const response = await fetch('http://localhost:3000/api/videos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ name: nombre, youtubeUrl: url })
+        });
+        if (response.ok) {
+          alert('Video creado exitosamente');
+          document.getElementById('crearVideoForm').reset(); // Limpia el formulario después de crear el video
+        } else {
+          const errorMessageDiv = document.getElementById('errorMessages');
+          errorMessageDiv.innerHTML = `<p>Error al crear el video: ${response.statusText}</p>`; // Mostrar el mensaje de error
+        }
+      } catch (error) {
+        console.error('Error al crear el video:', error);
+        const errorMessageDiv = document.getElementById('errorMessages');
+        errorMessageDiv.innerHTML = `<p>${error.message}</p>`; // Mostrar el mensaje de error
+      }
+    });
+
+    function irAEditar() {
+      window.location.href = './editarVideos.html';
+    }
+  </script>
+</body>
+</html>
