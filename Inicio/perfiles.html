@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Usuarios Restringidos</title>
-<link rel="stylesheet" href="/styles/perfiles.css">
-<link rel="stylesheet" href="/styles/admin.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuarios Restringidos</title>
+  <link rel="stylesheet" href="/styles/perfiles.css">
+  <link rel="stylesheet" href="/styles/admin.css">
 </head>
 <body>
-  <header>
-    <h1>Panel de Administrador</h1>
-    <nav>
-      <ul>
-        <li><a href="administrador.html">Perfiles</a></li>
-        <li><a href="perfiles.html">Crear Perfiles</a></li>
-        <li><a href="CrudVideos.html">Gestión de Videos</a></li>
-        <li><a href="login.html">Cerrar Sesión</a></li>
-      </ul>
-    </nav>
+  <header class="navbar">
+    <div class="container-navbar">
+        <h1>Panel de Administrador</h1>
+        <nav class="navbar-nav">
+            <ul class="navbar-list">
+                <a href="administrador.html">Perfiles</a>
+                <a href="perfiles.html">Crear Perfiles</a>
+                <a href="CrudVideos.html">Gestión de Videos</a>
+                <a href="login.html">Cerrar Sesión</a>
+            </ul>
+        </nav>
+    </div>
   </header>
 
   <div class="container">
@@ -108,39 +110,37 @@
       }
     });
 
-
     async function editarUsuario(id) {
-  // Obtener los nuevos valores del usuario desde el formulario
-  const nombreCompleto = prompt('Ingrese el nuevo nombre completo:');
-  const pin = prompt('Ingrese el nuevo PIN:');
-  const avatar = prompt('Ingrese la nueva ruta del avatar:');
-  const edad = parseInt(prompt('Ingrese la nueva edad:'));
+      // Obtener los nuevos valores del usuario desde el formulario
+      const nombreCompleto = prompt('Ingrese el nuevo nombre completo:');
+      const pin = prompt('Ingrese el nuevo PIN:');
+      const avatar = prompt('Ingrese la nueva ruta del avatar:');
+      const edad = parseInt(prompt('Ingrese la nueva edad:'));
 
-  // Crear el objeto con los nuevos valores
-  const nuevoUsuario = {
-    nombreCompleto,
-    pin,
-    avatar,
-    edad
-  };
+      // Crear el objeto con los nuevos valores
+      const nuevoUsuario = {
+        nombreCompleto,
+        pin,
+        avatar,
+        edad
+      };
 
-  try {
-    // Enviar la solicitud PUT al servidor para actualizar el usuario
-    const response = await fetch(`http://localhost:3000/api/perfiles?${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(nuevoUsuario)
-    });
-    const data = await response.json();
-    console.log('Usuario actualizado:', data);
-    cargarUsuariosRestringidos(); // Recargar la lista de usuarios después de la actualización
-  } catch (error) {
-    console.error('Error al editar usuario restringido:', error);
-  }
-}
-
+      try {
+        // Enviar la solicitud PUT al servidor para actualizar el usuario
+        const response = await fetch(`http://localhost:3000/api/perfiles/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(nuevoUsuario)
+        });
+        const data = await response.json();
+        console.log('Usuario actualizado:', data);
+        cargarUsuariosRestringidos(); // Recargar la lista de usuarios después de la actualización
+      } catch (error) {
+        console.error('Error al editar usuario restringido:', error);
+      }
+    }
 
     async function eliminarUsuario(id) {
       if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
@@ -163,11 +163,8 @@
       document.getElementById('avatar').value = '/img/hacker.png';
       document.getElementById('edad').value = '';
     }
-    
 
     cargarUsuariosRestringidos();
-
-    
   </script>
 </body>
 </html>

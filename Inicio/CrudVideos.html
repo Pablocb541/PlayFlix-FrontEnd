@@ -105,7 +105,6 @@
       }
     }
 
-    // Función para editar un video
     async function editVideo(id, name, youtubeUrl) {
       const newName = prompt('Ingrese el nuevo nombre:', name); // Solicita al usuario ingresar el nuevo nombre
       const newUrl = prompt('Ingrese la nueva URL de YouTube:', youtubeUrl); // Solicita al usuario ingresar la nueva URL de YouTube
@@ -129,6 +128,7 @@
         console.error('Error al editar el video:', response.statusText); // Muestra un mensaje de error en la consola
       }
     }
+
 
     loadVideos(); // Llama a la función loadVideos al cargar la página
     
