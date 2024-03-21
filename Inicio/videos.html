@@ -9,12 +9,12 @@
 <body>
   <div class="navbar">
     <a href="login.html" onclick="logout()">Cerrar Sesión</a>
-    <a href="administrador.html" onclick="backToProfiles()">Perfiles</a>
+    <a href="Inicio.html" onclick="backToProfiles()">Perfiles</a>
   </div>
 
   <h1>Playlist</h1>
 
-  <!-- Contenedor donde se mostrarán los videos -->
+  <!-- Contenedor donde se muestam los videos -->
   <div id="videoContainer"></div>
 
   <script>
@@ -24,6 +24,7 @@
         this.apiUrl = apiUrl;
       }
 
+      // Método para obtener los videos del servidor
       async fetchVideos(userId) {
         try {
           const response = await fetch(`${this.apiUrl}?userId=${userId}`); // Envía el ID de usuario como parámetro
@@ -35,8 +36,9 @@
         }
       }
 
+      // Método para renderizar los videos en el contenedor especificado
       async renderVideos(containerId, userId) {
-        const videos = await this.fetchVideos(userId);
+        const videos = await this.fetchVideos(userId); // Obtener los videos del servidor
         const container = document.getElementById(containerId);
         if (!container) {
           console.error(`Container element with ID ${containerId} not found.`);
@@ -44,43 +46,49 @@
         }
         container.innerHTML = ''; // Limpiar el contenedor antes de agregar los videos
 
+       
         for (let i = 0; i < videos.length; i++) {
           const video = videos[i];
-          const videoId = this.extractVideoId(video.youtubeUrl);
+          const videoId = this.extractVideoId(video.youtubeUrl); // Extraer el ID del video de la URL de YouTube
           const videoContainer = document.createElement('div');
           videoContainer.classList.add('video-container');
 
-          // Agregar evento de clic al contenedor de video
+          // Agregar evento de clic al contenedor de video para reproducirlo
           videoContainer.addEventListener('click', () => {
-            // Cambiar el tamaño del iframe para que se vea más grande
+            // Crear un iframe para reproducir el video de YouTube
             const iframe = document.createElement('iframe');
             iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}`;
             iframe.title = 'YouTube video player';
             iframe.frameBorder = '0';
             iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
             iframe.allowFullscreen = true;
-            videoContainer.innerHTML = '';
-            videoContainer.appendChild(iframe);
+            videoContainer.innerHTML = ''; // Limpiar el contenedor antes de agregar el iframe
+            videoContainer.appendChild(iframe); // Agregar el iframe al contenedor
           });
           
+          // Crear una imagen en miniatura del video
           const thumbnail = document.createElement('img');
           thumbnail.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
           thumbnail.alt = 'Video Thumbnail';
           thumbnail.classList.add('video-thumbnail');
 
+          // Crear una superposición con el título del video
           const overlay = document.createElement('div');
           overlay.classList.add('video-overlay');
           overlay.innerHTML = `
             <div class="video-title">${video.name}</div>
           `;
 
+          // Agregar la imagen en miniatura y la superposición al contenedor del video
           videoContainer.appendChild(thumbnail);
           videoContainer.appendChild(overlay);
 
+          // Agregar el contenedor del video al contenedor principal
           container.appendChild(videoContainer);
         }
       }
 
+      // Método para extraer el ID del video de la URL de YouTube
       extractVideoId(youtubeUrl) {
         const url = new URL(youtubeUrl);
         const videoId = url.searchParams.get('v');
@@ -91,9 +99,11 @@
     // Obtener el ID de usuario del localStorage
     const userId = localStorage.getItem('userId');
 
-    // Uso de la clase YouTubeLinkExtractor
+    // Crear una instancia de la clase YouTubeLinkExtractor con la URL del servidor de videos
     const extractor = new YouTubeLinkExtractor('http://localhost:3000/api/videos');
+    // Renderizar los videos en el contenedor con el ID 'videoContainer'
     extractor.renderVideos('videoContainer', userId);
-  </script>
+</script>
+
 </body>
 </html>
