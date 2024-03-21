@@ -13,7 +13,7 @@
     <h1>Panel de Administrador</h1>
     <nav>
       <ul>
-        <li><a href="administrador.html">Perfiles</a></li>
+        <li><a href="Inicio.html">Perfiles</a></li>
         <li><a href="crearPerfiles.html">Gestión de  Perfiles</a></li>
         <li><a href="crearVideos.html">Gestión de Videos</a></li>
         <li><a href="videos.html">Ver PlayList</a></li>
@@ -35,7 +35,7 @@
       <label for="editNombreCompleto">Nombre Completo*</label>
       <input type="text" id="editNombreCompleto" required>
       <label for="editPin">PIN*</label>
-      <input type="text" id="editPin" required>
+      <input type="text" id="editPin" pattern="[0-9]{6}" title="El PIN debe tener exactamente 6 dígitos" required>
       <label for="editAvatar">Avatar*</label>
       <select id="editAvatar" required>
         <option value="/img/hacker.png">Avatar 1</option>

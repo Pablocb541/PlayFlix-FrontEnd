@@ -56,7 +56,7 @@
                     localStorage.setItem('pin', pin);
 
                     // Redireccionar a la página de administrador
-                    window.location.href = "./administrador.html";
+                    window.location.href = "./inicio.html";
                 } else {
                     const errorData = await response.json();
                     document.getElementById("error-message").innerText = errorData.error;

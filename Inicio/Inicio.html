@@ -58,13 +58,13 @@ async function cargarPerfiles() {
 
 // Función para ingresar como administrador
 function ingresarComoAdministrador() {
-  window.location.href = "./registroAdmin.html"; // Redirigir directamente al panel de administrador
+  window.location.href = "./loginPin.html"; // Redirigir directamente al panel de administrador
 }
 
 // Función para enviar el PIN al servidor e ingresar
 async function ingresar(perfilId, nombreCompleto) {
   if (nombreCompleto === "administrador") {
-    window.location.href = "./registroAdmin.html"; // Redirigir directamente al panel de administrador
+    window.location.href = "./loginPin.html"; // Redirigir directamente al panel de administrador
     return;
   }
 
