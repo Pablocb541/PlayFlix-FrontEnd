@@ -59,9 +59,9 @@
     const editAvatarInput = document.getElementById('editAvatar');
     const editEdadInput = document.getElementById('editEdad');
 
-    async function cargarUsuariosRestringidos() {
+    async function cargarUsuariosRestringidos(userId) {
       try {
-        const response = await fetch('http://localhost:3000/api/perfiles', {
+        const response = await fetch(`http://localhost:3000/api/perfiles?userId=${userId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -112,7 +112,7 @@
         const data = await response.json();
         console.log('Usuario actualizado:', data);
         editarUsuarioFormContainer.style.display = 'none';
-        cargarUsuariosRestringidos();
+        cargarUsuariosRestringidos(userId);
       } catch (error) {
         console.error('Error al editar usuario restringido:', error);
       }
@@ -126,14 +126,15 @@
           });
           const data = await response.json();
           console.log('Usuario eliminado:', data);
-          cargarUsuariosRestringidos();
+          cargarUsuariosRestringidos(userId);
         } catch (error) {
           console.error('Error al eliminar usuario restringido:', error);
         }
       }
     }
 
-    cargarUsuariosRestringidos();
+    const userId = localStorage.getItem('userId');
+    cargarUsuariosRestringidos(userId);
   </script>
 </body>
 </html>

@@ -30,7 +30,8 @@
       <label for="nombreCompleto">Nombre Completo*</label>
       <input type="text" id="nombreCompleto" required>
       <label for="pin">PIN*</label>
-      <input type="text" id="pin" required>
+      <input type="text" id="pin" required pattern="[0-9]{6}" title="El PIN debe tener exactamente 6 dígitos.">
+      <!-- Agregamos el atributo pattern para especificar que el PIN debe tener exactamente 6 dígitos -->
       <label for="avatar">Avatar*</label>
       <select id="avatar" required>
         <option value="/img/hacker.png">Avatar 1</option>

@@ -50,19 +50,19 @@
       <input type="text" id="editNombre" required>
       <label for="editUrl">URL de YouTube*</label>
       <input type="text" id="editUrl" required>
+      <input type="hidden" id="editUserId"> <!-- Agregar campo oculto para almacenar userId -->
       <button type="submit">Guardar Cambios</button>
     </form>
   </div>
 
   <script>
     const videosList = document.getElementById('videosList');
-    const crearVideoFormContainer = document.getElementById('crearVideoFormContainer');
     const editarVideoFormContainer = document.getElementById('editarVideoFormContainer');
-    const createForm = document.getElementById('createForm');
     const editarVideoForm = document.getElementById('editarVideoForm');
     const editIdInput = document.getElementById('editId');
     const editNombreInput = document.getElementById('editNombre');
     const editUrlInput = document.getElementById('editUrl');
+    const editUserIdInput = document.getElementById('editUserId'); // Obtener el campo oculto para almacenar userId
 
     async function loadVideos() {
       try {
@@ -78,7 +78,7 @@
               <strong>${video.name}</strong> - <a href="${video.youtubeUrl}" target="_blank">Ver en YouTube</a>
             </div>
             <div class="video-actions">
-              <button onclick="mostrarFormularioEditar('${video._id}', '${video.name}', '${video.youtubeUrl}')">Editar</button>
+              <button onclick="mostrarFormularioEditar('${video._id}', '${video.name}', '${video.youtubeUrl}', '${video.userId}')">Editar</button>
               <button onclick="eliminarVideo('${video._id}')">Eliminar</button>
             </div>
           `;
@@ -89,68 +89,39 @@
       }
     }
 
-    // Funciones para mostrar y ocultar el formulario de edición
-    function mostrarFormularioEditar(id, nombre, url) {
+    function mostrarFormularioEditar(id, nombre, url, userId) {
       editarVideoFormContainer.style.display = 'block';
       editIdInput.value = id;
       editNombreInput.value = nombre;
       editUrlInput.value = url;
+      editUserIdInput.value = userId; // Establecer el userId en el campo oculto
     }
 
-    function ocultarFormularioEditar() {
-      editarVideoFormContainer.style.display = 'none';
-    }
-
-    // Agregar listener al formulario para crear un nuevo video
-    createForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const name = document.getElementById('name').value;
-      const youtubeUrl = document.getElementById('youtubeUrl').value;
-
-      try {
-        const response = await fetch('http://localhost:3000/api/videos', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ name, youtubeUrl })
-        });
-        if (response.ok) {
-          loadVideos();
-          createForm.reset();
-        } else {
-          console.error('Error al crear el video:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error al crear el video:', error);
-      }
-    });
-
-    // Agregar listener al formulario para editar un video
     editarVideoForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const id = editIdInput.value;
-      const name = editNombreInput.value;
-      const youtubeUrl = editUrlInput.value;
-
-      try {
-        const response = await fetch(`http://localhost:3000/api/videos/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ name, youtubeUrl })
-        });
-        if (response.ok) {
-          loadVideos();
-          editarVideoFormContainer.style.display = 'none';
-        } else {
-          console.error('Error al editar el video:', response.statusText);
+        event.preventDefault();
+        const id = editIdInput.value;
+        const name = editNombreInput.value;
+        const youtubeUrl = editUrlInput.value; // Cambiado de editUrlInput a editUrlInput.value
+        
+        try {
+            const response = await fetch(`http://localhost:3000/api/videos/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, youtubeUrl }) // Cambiado youtubeURL a youtubeUrl
+            });
+            if (response.ok) {
+            loadVideos();
+            editarVideoFormContainer.style.display = 'none';
+            } else {
+            console.error('Error al editar el video:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error al editar el video:', error);
         }
-      } catch (error) {
-        console.error('Error al editar el video:', error);
-      }
-    });
+        });
+
 
     async function eliminarVideo(id) {
       if (confirm('¿Estás seguro de que deseas eliminar este video?')) {

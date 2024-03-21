@@ -9,14 +9,16 @@
 <body>
     <h1>Bienvenido</h1>
     <div class="container">
-   
         <h1>Ingresar Pin</h1>
         <form id="login-form">
             <label for="pin">PIN:</label>
-            <input type="text" id="pin" name="pin" required>
+            <input type="text" id="pin" name="pin" required pattern="[0-9]{6}" title="El PIN debe tener exactamente 6 dígitos.">
+            <!-- Agregamos el atributo pattern para especificar que el PIN debe tener exactamente 6 dígitos -->
 
             <button type="submit">Iniciar</button>
         </form>
+        <p id="error-message" style="color: red;"></p> <!-- Mensaje de error -->
+    </div>
 
     <script>
         document.getElementById("login-form").addEventListener("submit", async function(event) {
@@ -29,6 +31,12 @@
                 data[key] = value;
             });
 
+            // Validar que el PIN tenga 6 dígitos
+            if (data.pin.length !== 6 || isNaN(data.pin)) {
+                document.getElementById("error-message").innerText = "El PIN debe tener exactamente 6 dígitos.";
+                return;
+            }
+
             try {
                 const response = await fetch("http://localhost:3000/api/loginUsuarios", {
                     method: "POST",
@@ -39,7 +47,12 @@
                 });
 
                 if (response.ok) {
-                    window.location.href = "./admin.html"; // Redireccionar a administrador.html
+                    const responseData = await response.json();
+                    if (responseData.success) {
+                        window.location.href = "./admin.html"; // Redireccionar a administrador.html si el PIN es correcto
+                    } else {
+                        document.getElementById("error-message").innerText = responseData.error; // Mostrar mensaje de error si el PIN es incorrecto
+                    }
                 } else {
                     const errorData = await response.json();
                     document.getElementById("error-message").innerText = errorData.error;
@@ -49,7 +62,6 @@
                 document.getElementById("error-message").innerText = "Error al iniciar sesión";
             }
         });
-
     </script>
 </body>
 </html>

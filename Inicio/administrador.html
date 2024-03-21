@@ -72,6 +72,11 @@ async function ingresar(perfilId, nombreCompleto) {
   const pin = pinInput.value;
 
   try {
+    // Validar el formato del PIN
+    if (!pin || isNaN(pin) || pin.length !== 6) {
+      throw new Error('El PIN debe ser un número de 6 dígitos.');
+    }
+
     const response = await fetch('http://localhost:3000/api/loginPin', {
       method: 'POST',
       headers: {
@@ -89,7 +94,11 @@ async function ingresar(perfilId, nombreCompleto) {
         console.error('No se proporcionó una URL de redirección válida.');
       }
     } else {
-      alert(data.error); // Mostrar mensaje de error
+      if (data.error === 'PIN inválido') {
+        alert('PIN inválido. Por favor, ingrese un PIN válido.');
+      } else {
+        alert(data.error); // Mostrar mensaje de error
+      }
     }
     
     // Borrar el código del campo de entrada después de ingresar
