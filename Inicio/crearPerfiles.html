@@ -48,6 +48,10 @@
   </div>
 
   <script>
+
+      // Obtener el ID del usuario del localStorage
+      const userId = localStorage.getItem('userId');
+
     document.getElementById('crearUsuarioForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const nombreCompleto = document.getElementById('nombreCompleto').value;
@@ -71,7 +75,7 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ nombreCompleto, pin, avatar, edad })
+          body: JSON.stringify({ nombreCompleto, pin, avatar, edad, userId})
         });
         const data = await response.json();
         console.log('Usuario restringido creado:', data);

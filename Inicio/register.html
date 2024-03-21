@@ -59,7 +59,7 @@
                 });
 
                 const responseData = await response.json();
-                alert(`Registro exitoso: ${JSON.stringify(responseData)}`);
+                alert(`${JSON.stringify(responseData)}`);
                 // Limpiar los campos del formulario después de enviarlos
                 document.getElementById("registro-form").reset();
             } catch (error) {

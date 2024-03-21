@@ -36,6 +36,9 @@
   </div>
 
   <script>
+    // Obtener el ID del usuario del localStorage
+    const userId = localStorage.getItem('userId');
+
     document.getElementById('crearVideoForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const nombre = document.getElementById('nombre').value;
@@ -50,9 +53,11 @@
         const response = await fetch('http://localhost:3000/api/videos', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            // Incluir el ID del usuario en las cabeceras de la solicitud
+            
           },
-          body: JSON.stringify({ name: nombre, youtubeUrl: url })
+          body: JSON.stringify({ name: nombre, youtubeUrl: url , 'userId': userId})
         });
         if (response.ok) {
           alert('Video creado exitosamente');

@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <title>Playlist</title>
   <link rel="stylesheet" href="/styles/videos.css">
-
 </head>
 <body>
   <div class="navbar">
@@ -13,7 +12,7 @@
     <a href="administrador.html" onclick="backToProfiles()">Perfiles</a>
   </div>
 
-  <h1>PlayList</h1>
+  <h1>Playlist</h1>
 
   <!-- Contenedor donde se mostrarán los videos -->
   <div id="videoContainer"></div>
@@ -25,9 +24,9 @@
         this.apiUrl = apiUrl;
       }
 
-      async fetchVideos() {
+      async fetchVideos(userId) {
         try {
-          const response = await fetch(this.apiUrl);
+          const response = await fetch(`${this.apiUrl}?userId=${userId}`); // Envía el ID de usuario como parámetro
           const data = await response.json();
           return data;
         } catch (error) {
@@ -36,8 +35,8 @@
         }
       }
 
-      async renderVideos(containerId) {
-        const videos = await this.fetchVideos();
+      async renderVideos(containerId, userId) {
+        const videos = await this.fetchVideos(userId);
         const container = document.getElementById(containerId);
         if (!container) {
           console.error(`Container element with ID ${containerId} not found.`);
@@ -89,9 +88,12 @@
       }
     }
 
+    // Obtener el ID de usuario del localStorage
+    const userId = localStorage.getItem('userId');
+
     // Uso de la clase YouTubeLinkExtractor
-    const extractor = new YouTubeLinkExtractor('http://localhost:3000/api/videos'); // Reemplaza la URL por la ruta correcta de tu API
-    extractor.renderVideos('videoContainer'); // Reemplaza 'videoContainer' por el ID del contenedor HTML donde deseas mostrar los videos
+    const extractor = new YouTubeLinkExtractor('http://localhost:3000/api/videos');
+    extractor.renderVideos('videoContainer', userId);
   </script>
 </body>
 </html>
